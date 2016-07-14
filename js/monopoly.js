@@ -143,7 +143,6 @@ Monopoly.setNextPlayerTurn = function(){
         //reset doubleCounter because it's a new turn
         Monopoly.doubleCounter = 0;
     }
-
     //give "current-turn" class to the correct player now
     currentPlayerTurn.removeClass("current-turn");
     var nextPlayer = $(".player#player" + nextPlayerId);
@@ -369,8 +368,8 @@ Monopoly.handlePassedGo = function(){
 
 Monopoly.isValidInput = function(input){
     var isValid = false;
-    var re = /^[1-4]$/; //regex for only numbers 1,2,3,4
-    if (re.test(input)){ //input was 1, 2, 3 or 4
+    var re = /^[1-6]$/; //regex for only numbers 1,2,3,4,5,6
+    if (re.test(input)){ //input was 1, 2, 3,4, 5 or 6
             isValid = true;
             return isValid;
     } else { //input is not valid

@@ -200,7 +200,16 @@ body{
     background-color: #d061cd;
 }
 
-.player1.cell #player1, .player2.cell #player2, .player3.cell #player3, .player4.cell #player4 {
+.player#player5 , .player5.cell .content{
+    background-color: #d061cd;
+}
+
+.player#player6 , .player6.cell .content{
+    background-color: #d061cd;
+}
+
+.player1.cell #player1, .player2.cell #player2, .player3.cell #player3,
+.player4.cell #player4, .player4.cell #player5, .player4.cell #player6 {
     background-image: url(../images/happyface.png);
     background-size: cover;
     background-position: center;
