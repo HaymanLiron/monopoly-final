@@ -69,8 +69,8 @@ Monopoly.dice2num = 1;
 Monopoly.rollDice = function(){
     var currentPlayer = Monopoly.getCurrentPlayer();
     //get results for each dice
-    Monopoly.dice1num =3;// Math.floor(Math.random() * 6) + 1 ;
-    Monopoly.dice2num =3;// Math.floor(Math.random() * 6) + 1 ;
+    Monopoly.dice1num = Math.floor(Math.random() * 6) + 1 ;
+    Monopoly.dice2num = Math.floor(Math.random() * 6) + 1 ;
     //clear dots from dice
     $(".dice").find(".dice-dot").css("opacity",0);
     //
@@ -128,6 +128,11 @@ Monopoly.handleTurn = function(){
 };
 
 Monopoly.setNextPlayerTurn = function(){
+    //update player money counts on screen
+    for (var i = 1; i <= $(".player").length; i++){
+        $(".game-summary .player" + i).text($("#player" + i).attr("title"));
+    }
+
     //work out who the next player to have a turn is, and allow them to have a turn
     var currentPlayerTurn = Monopoly.getCurrentPlayer();
     var playerId = parseInt(currentPlayerTurn.attr("id").replace("player",""));
@@ -337,6 +342,7 @@ Monopoly.handleAction = function(player,action,amount){
 
 Monopoly.createPlayers = function(numOfPlayers){
     //creates the players at the beginning of the game
+    //also creates divs where player summaries are displayed
     var startCell = $(".go");
     for (var i=1; i<= numOfPlayers; i++){
         var player = $("<div />").addClass("player shadowed").attr("id","player" + i).attr("title","player" + i + ": $" + Monopoly.moneyAtStart);
@@ -345,6 +351,12 @@ Monopoly.createPlayers = function(numOfPlayers){
             player.addClass("current-turn");
         }
         player.attr("data-money",Monopoly.moneyAtStart);
+
+        var playerSummary = $("<div/>")
+            .addClass("playerSummary")
+            .addClass("player" + i)
+            .text(player.attr("title"));
+        $(".game-summary").append(playerSummary);
     }
 };
 
@@ -384,7 +396,6 @@ Monopoly.showErrorMsg = function(){
             $(".popup-page .invalid-error").fadeTo(500,0);
     },2000);
 };
-
 
 Monopoly.adjustBoardSize = function(){
     //when window is resized we call this function to make the board smaller and still fit the screen
