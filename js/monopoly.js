@@ -63,22 +63,28 @@ Monopoly.updatePlayersMoney = function(player,amount){
     Monopoly.playSound("chaching", "wav");
 };
 
+Monopoly.dice1num = 1;
+Monopoly.dice2num = 1;
 
 Monopoly.rollDice = function(){
+    var currentPlayer = Monopoly.getCurrentPlayer();
     //get results for each dice
-    var result1 = Math.floor(Math.random() * 6) + 1 ;
-    var result2 = Math.floor(Math.random() * 6) + 1 ;
+    Monopoly.dice1num =3;// Math.floor(Math.random() * 6) + 1 ;
+    Monopoly.dice2num =3;// Math.floor(Math.random() * 6) + 1 ;
     //clear dots from dice
     $(".dice").find(".dice-dot").css("opacity",0);
     //
-    $(".dice#dice1").attr("data-num",result1).find(".dice-dot.num" + result1).css("opacity",1);
-    $(".dice#dice2").attr("data-num",result2).find(".dice-dot.num" + result2).css("opacity",1);
-    if (result1 == result2){
+    $(".dice#dice1").attr("data-num",Monopoly.dice1num).find(".dice-dot.num" + Monopoly.dice1num).css("opacity",1);
+    $(".dice#dice2").attr("data-num",Monopoly.dice2num).find(".dice-dot.num" + Monopoly.dice2num).css("opacity",1);
+    if (Monopoly.dice1num == Monopoly.dice2num){
         //player rolled doubles
         Monopoly.doubleCounter++;
+        if (Monopoly.doubleCounter >= 3){//go straight to jail
+            Monopoly.handleGoToJail(currentPlayer);
+            return;
+        }
     }
-    var currentPlayer = Monopoly.getCurrentPlayer();
-    Monopoly.handleAction(currentPlayer,"move",result1 + result2);
+    Monopoly.handleAction(currentPlayer,"move",Monopoly.dice1num + Monopoly.dice2num);
 };
 
 
@@ -125,10 +131,19 @@ Monopoly.setNextPlayerTurn = function(){
     //work out who the next player to have a turn is, and allow them to have a turn
     var currentPlayerTurn = Monopoly.getCurrentPlayer();
     var playerId = parseInt(currentPlayerTurn.attr("id").replace("player",""));
-    var nextPlayerId = playerId + 1;
-    if (nextPlayerId > $(".player").length){ //we need to start back at player 1
-        nextPlayerId = 1;
+    var nextPlayerId;
+    if (Monopoly.dice1num == Monopoly.dice2num && Monopoly.doubleCounter < 3){//user rolled double less than 3 times and can go again.
+        // Note that we let him go again, even if he ended in jail
+        nextPlayerId = playerId;
+    } else { //old player did not roll a double, so new player's turn
+        nextPlayerId = playerId + 1;
+        if (nextPlayerId > $(".player").length){ //we need to start back at player 1
+            nextPlayerId = 1;
+        }
+        //reset doubleCounter because it's a new turn
+        Monopoly.doubleCounter = 0;
     }
+
     //give "current-turn" class to the correct player now
     currentPlayerTurn.removeClass("current-turn");
     var nextPlayer = $(".player#player" + nextPlayerId);
